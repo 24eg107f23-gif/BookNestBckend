@@ -1,9 +1,7 @@
-```java
 package com.booknest.config;
 
-import com.booknest.backend.entity.User;
-import com.booknest.backend.repository.UserRepository;
-import com.booknest.backend.service.JwtService;
+import com.booknest.entity.AppUser;
+import com.booknest.repository.UserRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -29,9 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserRepository users;
 
-    public JwtAuthenticationFilter(
-            JwtService jwtService,
-            UserRepository users) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserRepository users) {
         this.jwtService = jwtService;
         this.users = users;
     }
@@ -40,31 +36,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain)
-            throws ServletException, IOException {
+            FilterChain chain) throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header != null && header.startsWith("Bearer ")) {
             try {
                 Claims claims = jwtService.parse(header.substring(7));
-
-                User account = users.findByEmailIgnoreCase(
-                        claims.getSubject()).orElse(null);
+                AppUser account = users.findByEmailIgnoreCase(claims.getSubject()).orElse(null);
 
                 if (account != null) {
                     String role = account.getRole().name();
-
                     if (role.equals(claims.get("role", String.class))) {
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
                                         account.getEmail(),
                                         null,
-                                        List.of(new SimpleGrantedAuthority(
-                                                "ROLE_" + role)));
+                                        List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
-                        SecurityContextHolder.getContext()
-                                .setAuthentication(authentication);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
             } catch (JwtException | IllegalArgumentException exception) {
@@ -75,4 +65,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 }
-```
