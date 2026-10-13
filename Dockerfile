@@ -5,10 +5,10 @@ COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw .
 COPY src src
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+RUN chmod +x mvnw && ./mvnw -B clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/booknest-api-1.0.0.jar app.jar
 EXPOSE 8080
 CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
