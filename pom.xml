@@ -14,7 +14,7 @@
     <groupId>com.booknest</groupId>
     <artifactId>booknest-api</artifactId>
     <version>1.0.0</version>
-    <name>BookNest API</name>
+    <name>BookNest PI</name>
     <description>REST API for the BookNest library management system</description>
 
     <properties>
@@ -71,19 +71,18 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+   
     </dependencies>
 
-   ```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-                <mainClass>com.booknest.BookNestApplication</mainClass>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-```
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.booknest.BookNestApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
